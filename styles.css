@@ -1,0 +1,201 @@
+@media screen and (max-width: 920px) {
+  /* фиксирование таблицы, что бы не уходила за края */
+  table {
+    table-layout: fixed;
+  }
+
+
+  /* удаление столбцов с изображениями */
+  .column {
+    display: none;
+  }
+
+
+  /* изменение шрифта */
+  .title-column h1 {
+    font-size: 25px;
+    font-family: cursive;
+  }
+
+  .title-column h3 {
+    font-size: 20px;
+    font-family: cursive;
+  }
+
+  .rights h2 {
+    font-size: 20px;
+    font-family: cursive;
+  }
+
+  .menu li {
+    font-size: 17px;
+  }
+}
+
+
+@media screen and (max-width: 1120px) {
+  /* удаление столбцов с изображениями */
+  .image-column {
+    display: none;
+  }
+}
+
+
+body {
+  margin: 0;
+  padding: 2.25%;
+  background-color: #c09669;
+}
+
+.content {  /* центральная часть страницы */
+  padding: 0.5em;
+  background-color: #ffffff;
+}
+
+.column {  /* дополнительная лента рядом с главной */
+  background-color: #f1f1f1;
+  width: 25%;
+  padding: 1em;
+  vertical-align: top;
+}
+
+.central-image {  /* выравнивание изображений по центру */
+  text-align: center;
+}
+
+.newsfeed {  /* главная лента с контентом */
+  vertical-align: top;
+  width: auto;
+  padding: 1em;
+  background-color: #f1f1f1;
+}
+
+.article-image {  /* картинка в статье */
+  float: left;
+  margin: 0.65em 0.65em 0.65em 0;
+  width: 8em;
+  height: 8em;
+}
+
+.cleric-image {
+  float: left;
+  margin: 0.65em 0.65em 0.65em 0;
+}
+
+a {
+  text-decoration: none;
+  color: #a83b24;
+}
+
+a:hover {  /* ссылка при наведении */
+  color: #c09669;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: cursive;
+}
+
+
+header {  /* шапка */
+  background-color: #a83b24;
+  text-align: center;
+}
+
+/* далее шапка сайта */
+.base-table {
+  width: 100%;
+  border-spacing: 0.3em;
+}
+
+.image-column {  /* столбик с изображениями */
+  width: 15%;
+  padding-top: 0.7em;
+}
+
+.image-column img {  /* изображения в шапке */
+  height: 15em;
+  width: 15em;
+}
+
+.title-column {  /* заголовок в шапке */
+  width: 50%;
+  text-align: center;
+  color: #c09669;
+}
+
+.title-column a:hover {  /* ссылка в шапке при наведении */
+  text-decoration: underline;
+}
+
+.title {  /* названия и заголовки */
+  text-align: center;
+  color: #c09669;
+}
+
+a .title:hover {
+  text-decoration: underline;
+}
+
+.sub-title {
+  color: #c09669;
+}
+
+
+/* далее меню сайта */
+.menu ul {  /* главное меню */
+  position: relative;
+  display: inline-block;
+  height: auto;
+  min-height: 3em;
+  margin: 0;
+  padding: 0;
+}
+
+.menu ul ul {  /* внутреннее меню */
+  position: absolute;
+  display: none;
+  margin-top: 0.65em;
+  margin-left: -0.65em;
+}
+
+.menu ul li {  /* элементы каждого меню */
+  display: inline-block;
+  padding: 0.65em;
+  background: #a83b24;
+}
+
+.menu a {  /* ссылки меню */
+  display: block;
+  font-family: cursive;
+  color: #ffffff;
+  background: #a83b24;
+  border-right: 0.065em solid #a83b24;
+}
+
+.menu a:hover {  /* ссылка меню при наведении */
+  color: #c09669;
+}
+
+.menu a:actived {  /* ссылка меню при нажатии */
+  color: #c09669;
+}
+
+.menu li:hover ul, .menu li:hover li {  /* выдвижение меню */
+  display: block;
+}
+
+
+/* далее подвал */
+footer {  /* подвал */
+  position: relative;
+  top: 0; left: 0;
+  width: 100%;
+  height: 20%;
+  text-align: center;
+  background-color: #a83b24;
+}
+
+.rights {  /* авторские права */
+  padding: 2em;
+  color: #ffffff;
+}
