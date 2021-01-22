@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Новостная лента -->
+<td class="newsfeed">
+  <div class="articles">
+    <h2 class="title">События</h2>
+    <hr width="80%" color="#c09669">
+
+    <div class="article">
+      <a href=""><h3 class="title">Статья 1</h3></a>
+      <p><img class="article-image" src="../static/images/patriarch.png"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. Quis hendrerit dolor magna eget est lorem ipsum dolor sit. Volutpat odio facilisis mauris sit amet massa <a href="">ссылки</a>. Commodo odio aenean sed adipiscing diam donec adipiscing tristique. Mi eget mauris pharetra et. Non tellus orci ac auctor augue. Elit at imperdiet dui accumsan sit. Ornare arcu dui vivamus arcu felis. Egestas integer eget aliquet nibh praesent. In hac habitasse platea dictumst quisque sagittis purus. Pulvinar elementum integer enim neque volutpat ac. </p>
+    </div>
+
+    <hr width="80%" color="#c09669">
+
+    {% for post in posts %}
+    <p>{{post.phrase}}</p>
+    <hr width="80%" color="#c09669">
+    {% endfor %}
+
+</div></td>
+
+{% endblock %}
