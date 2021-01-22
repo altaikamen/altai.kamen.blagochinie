@@ -82,6 +82,14 @@ body {
   margin: 0.65em 0.65em 0.65em 0;
 }
 
+.button {
+  color: #c09669;
+}
+
+.button:hover {
+  color: #a83b24;
+}
+
 a {
   text-decoration: none;
   color: #a83b24;
