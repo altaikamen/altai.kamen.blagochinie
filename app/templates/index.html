@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<!--  -->
+<!--  -->
+
 <h2 class="title">События</h2>
 <hr width="80%" color="#c09669">
 
@@ -14,6 +17,15 @@
 {% endfor %}
 
 <br>
-<a class="button" href="{{ url_for('addiction') }}">Туда &#8658;</a>
+{% if now_articles.max %}
+<a class="button" href="{{ url_for('last_page') }}">&#8656; Сюда</a>
+
+{% elif now_articles.min %}
+<a class="button" href="{{ url_for('next_page', id=1) }}">Туда &#8658;</a>
+
+{% else %}
+<a class="button" href="{{ url_for('last_page') }}">&#8656; Сюда</a> |
+<a class="button" href="{{ url_for('next_page', id=now_articles.id) }}">Туда &#8658;</a>
+{% endif %}
 
 {% endblock %}
