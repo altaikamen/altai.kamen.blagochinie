@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 class="title">{{ post.title }}</h2>
+<hr width="80%" color="#c09669">
+
+<div class="article">
+  <p><img class="article-image" src="../static/images/patriarch.png">{{ post.article }}</p>
+</div>
+
+<hr width="80%" color="#c09669">
+
+{% endblock %}

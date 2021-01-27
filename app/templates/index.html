@@ -1,16 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!--  -->
-<!--  -->
-
 <h2 class="title">События</h2>
 <hr width="80%" color="#c09669">
 
 {% for post in posts %}
 <div class="article">
-  <a href=""><h3 class="title">Статья 1</h3></a>
-  <p><img class="article-image" src="../static/images/patriarch.png">{{ post[1] }}</p>
+  <a href="{{ url_for('watch_post', post=post[2]) }}"><h3 class="title">{{ post[1] }}</h3></a>
+  <p><img class="article-image" src="../static/images/patriarch.png">{{ post[3] }}</p>
 </div>
 
 <hr width="80%" color="#c09669">
@@ -18,14 +15,14 @@
 
 <br>
 {% if now_articles.max %}
-<a class="button" href="{{ url_for('last_page') }}">&#8656; Сюда</a>
+<a class="button" href="{{ url_for('last_page', id=now_articles.next_id) }}">&#8656; Назад</a>
 
 {% elif now_articles.min %}
-<a class="button" href="{{ url_for('next_page', id=1) }}">Туда &#8658;</a>
+<a class="button" href="{{ url_for('next_page', id=1) }}">Вперед &#8658;</a>
 
 {% else %}
-<a class="button" href="{{ url_for('last_page') }}">&#8656; Сюда</a> |
-<a class="button" href="{{ url_for('next_page', id=now_articles.id) }}">Туда &#8658;</a>
+<a class="button" href="{{ url_for('last_page', id=now_articles.next_id) }}">&#8656; Назад</a> |
+<a class="button" href="{{ url_for('next_page', id=now_articles.next_id) }}">Вперед &#8658;</a>
 {% endif %}
 
 {% endblock %}
