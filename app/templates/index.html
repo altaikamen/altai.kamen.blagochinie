@@ -14,15 +14,15 @@
 {% endfor %}
 
 <br>
-{% if now_articles.max %}
-<a class="button" href="{{ url_for('last_page', id=now_articles.next_id) }}">&#8656; Назад</a>
+{% if page.max %}
+<a class="button" href="{{ url_for('last_page', id=page.id) }}">&#8656; Назад</a>
 
-{% elif now_articles.min %}
+{% elif page.min %}
 <a class="button" href="{{ url_for('next_page', id=1) }}">Вперед &#8658;</a>
 
 {% else %}
-<a class="button" href="{{ url_for('last_page', id=now_articles.next_id) }}">&#8656; Назад</a> |
-<a class="button" href="{{ url_for('next_page', id=now_articles.next_id) }}">Вперед &#8658;</a>
+<a class="button" href="{{ url_for('last_page', id=page.id) }}">&#8656; Назад</a> |
+<a class="button" href="{{ url_for('next_page', id=page.id) }}">Вперед &#8658;</a>
 {% endif %}
 
 {% endblock %}
