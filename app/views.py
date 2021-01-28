@@ -1,45 +1,45 @@
 from flask import Flask, render_template
 from app import random_quote as rq
-from app import article as a
+from app import article as all_articles
 from icecream import ic
 
 app = Flask(__name__)
 
-all_articles = a.get_article()
-last_article_id = all_articles[-1][0]
+articles = all_articles.get_articles()
+last_articles_index = articles[-1][0]
 
-first_articles = {'first_id': 0, 'last_id': 10, 'last_index': last_article_id, 'min': True, 'max': False}
-now_articles = {}
+first_page = {'first_id': 0, 'last_id': 10, 'last_index': last_articles_index, 'min': True, 'max': False}
+page_data = {}
 
 
 @app.route('/')
 @app.route('/main_page/')
 def index():
-    first_id = first_articles['first_id']
-    last_id = first_articles['last_id']
+    first_id = first_page['first_id']
+    last_id = first_page['last_id']
+    posts = articles[first_id:last_id]
 
-    return render_template('index.html', quote=rq.get_random_quote(), posts=all_articles[first_id:last_id],
-                           now_articles=first_articles)
+    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=first_page)
 
 
 @app.route('/contact/')
 def contact():
-    return render_template('sections\\contact.html', quote=rq.get_random_quote())
+    return render_template('sections/contact.html', quote=rq.get_random_quote())
 
 
 @app.route('/archbishop/')
 def archbishop():
-    return render_template('sections\\archbishop.html', quote=rq.get_random_quote())
+    return render_template('sections/archbishop.html', quote=rq.get_random_quote())
 
 
 @app.route('/clergy/')
 def clergy():
-    return render_template('clergy\\clerics_menu.html', quote=rq.get_random_quote())
+    return render_template('clergy/clerics_menu.html', quote=rq.get_random_quote())
 
 
 @app.route('/churches/')
 def churches():
-    return render_template('churches\\churches_menu.html', quote=rq.get_random_quote())
+    return render_template('churches/churches_menu.html', quote=rq.get_random_quote())
 
 
 @app.route('/about/')
@@ -75,57 +75,39 @@ def watch_post(post):
 
 @app.route('/page<int:id>/')
 def next_page(id):
-    global now_articles
+    global page_data
 
-    # для самой первой страницы
-    if id == 1:
-        first_id = 10
-        last_id = 20
-
-        id += 1
-
-        now_articles = {'first_id': first_id, 'last_id': last_id, 'last_index': last_article_id, 'next_id': id,
-                        'min': False, 'max': False}
-
-        return render_template('index.html', quote=rq.get_random_quote(),
-                               posts=all_articles[first_id:last_id],
-                               now_articles=now_articles)
-
-    # для последующих страниц
-    first_id = now_articles['first_id'] + 10
+    first_id = id * 10
     last_id = first_id + 10
 
     id += 1
 
-    # для самой последней страницы
-    if last_id >= last_article_id:
-        first_id = last_article_id - 10
+    if last_id >= last_articles_index:  # для самой последней страницы
+        first_id = last_articles_index - 10
 
-        id = str(last_article_id)[0]
+        id = str(last_articles_index)[0]
         id = int(id)
 
-        now_articles = {'first_id': first_id, 'last_id': last_article_id, 'last_index': last_article_id, 'next_id': id,
+        posts = articles[first_id:last_id]
+        page_data = {'first_id': first_id, 'last_id': last_articles_index, 'last_index': last_articles_index, 'id': id,
                         'min': False, 'max': True}
 
-        return render_template('index.html', quote=rq.get_random_quote(),
-                               posts=all_articles[first_id:last_id],
-                               now_articles=now_articles)
-    else:
-        # для последующих страниц
-        now_articles = {'first_id': first_id, 'last_id': last_id, 'last_index': last_article_id, 'next_id': id,
+        return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data)
+
+    else:  # для последующих страниц
+        posts = articles[first_id:last_id]
+        page_data = {'first_id': first_id, 'last_id': last_id, 'last_index': last_articles_index, 'id': id,
                         'min': False, 'max': False}
 
-        return render_template('index.html', quote=rq.get_random_quote(),
-                               posts=all_articles[first_id:last_id],
-                               now_articles=now_articles)
+        return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data)
 
 
 @app.route('/page<int:id>/')
 def last_page(id):
-    global now_articles
+    global page_data
 
-    first_id = now_articles['first_id'] - 10
-    last_id = now_articles['last_id'] - 10
+    first_id = page_data['first_id'] - 10
+    last_id = page_data['last_id'] - 10
 
     if first_id <= 0:
         # для самой первой страницы
@@ -133,22 +115,22 @@ def last_page(id):
         last_id = 11
         id = 1
 
-        now_articles = {'first_id': first_id, 'last_id': last_id, 'last_index': last_article_id, 'id': id,
+        page_data = {'first_id': first_id, 'last_id': last_id, 'last_index': last_articles_index, 'id': id,
                         'min': False, 'max': False}
-        ic(now_articles)
+        ic(page_data)
 
         return render_template('index.html', quote=rq.get_random_quote(),
-                               posts=all_articles[first_id:last_id],
-                               now_articles=now_articles)
+                               posts=articles[first_id:last_id],
+                               now_articles=page_data)
     else:
         # для последующих страниц
         id -= 1
 
-        now_articles = {'first_id': first_id, 'last_id': last_id, 'last_index': last_article_id, 'id': id,
+        page_data = {'first_id': first_id, 'last_id': last_id, 'last_index': last_articles_index, 'id': id,
                         'min': False, 'max': False}
 
-        ic(now_articles)
+        ic(page_data)
 
         return render_template('index.html', quote=rq.get_random_quote(),
-                               posts=all_articles[first_id:last_id],
-                               now_articles=now_articles)
+                               posts=articles[first_id:last_id],
+                               now_articles=page_data)

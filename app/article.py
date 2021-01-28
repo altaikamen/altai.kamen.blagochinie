@@ -46,7 +46,7 @@ class DataBase:
             self.update_data('articles.sqlite', query)
 
 
-def get_article():
+def get_articles():
     db = DataBase()
     data = db.pull_data('app\\static\\databases\\articles.sqlite')
 
