@@ -5,8 +5,8 @@ from icecream import ic
 
 app = Flask(__name__)
 
-articles = all_articles.get_articles()
-last_articles_index = articles[-1][0]
+all_articles = all_articles.get_articles()
+last_articles_index = all_articles[-1][0]
 
 first_page = {'first_id': 0, 'last_id': 10, 'last_index': last_articles_index, 'min': True, 'max': False}
 page_data = {}
@@ -17,7 +17,7 @@ page_data = {}
 def index():
     first_id = first_page['first_id']
     last_id = first_page['last_id']
-    posts = articles[first_id:last_id]
+    posts = all_articles[first_id:last_id]
 
     return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=first_page)
 
@@ -88,14 +88,14 @@ def next_page(id):
         id = str(last_articles_index)[0]
         id = int(id)
 
-        posts = articles[first_id:last_id]
+        posts = all_articles[first_id:last_id]
         page_data = {'first_id': first_id, 'last_id': last_articles_index, 'last_index': last_articles_index, 'id': id,
                         'min': False, 'max': True}
 
         return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data)
 
     else:  # для последующих страниц
-        posts = articles[first_id:last_id]
+        posts = all_articles[first_id:last_id]
         page_data = {'first_id': first_id, 'last_id': last_id, 'last_index': last_articles_index, 'id': id,
                         'min': False, 'max': False}
 
@@ -120,7 +120,7 @@ def last_page(id):
         ic(page_data)
 
         return render_template('index.html', quote=rq.get_random_quote(),
-                               posts=articles[first_id:last_id],
+                               posts=all_articles[first_id:last_id],
                                now_articles=page_data)
     else:
         # для последующих страниц
@@ -132,5 +132,5 @@ def last_page(id):
         ic(page_data)
 
         return render_template('index.html', quote=rq.get_random_quote(),
-                               posts=articles[first_id:last_id],
+                               posts=all_articles[first_id:last_id],
                                now_articles=page_data)
