@@ -1,33 +1,34 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from app import random_quote as rq
-from app import article as all_articles
+from app import read_databases
 from icecream import ic
 
 app = Flask(__name__)
 
-all_articles = all_articles.get_articles()
-last_articles_index = all_articles[-1][0]
+articles_database = read_databases.get_articles('app\\static\\databases\\articles.sqlite')
+active_databases = articles_database
 
-first_page = {'first_id': 0, 'last_id': 10, 'last_index': last_articles_index, 'min': True, 'max': False}
-page_data = {}
+latest_index = active_databases[-1][0]
+latest_id = int(str(latest_index)[0])
 
 
 @app.route('/')
-@app.route('/main_page/')
-def index():
-    first_id = first_page['first_id']
-    last_id = first_page['last_id']
-    posts = all_articles[first_id:last_id]
+@app.route('/main_page')
+def main_page():
+    global active_databases
+    active_databases = articles_database
+    page_data = {'id': 0, 'next_id': 1, 'min': True, 'max': False}
+    posts = active_databases[0:10]
 
-    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=first_page)
+    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data)
 
 
-@app.route('/contact/')
+@app.route('/contact')
 def contact():
     return render_template('sections/contact.html', quote=rq.get_random_quote())
 
 
-@app.route('/archbishop/')
+@app.route('/archbishop')
 def archbishop():
     return render_template('sections/archbishop.html', quote=rq.get_random_quote())
 
@@ -42,7 +43,7 @@ def churches():
     return render_template('churches/churches_menu.html', quote=rq.get_random_quote())
 
 
-@app.route('/about/')
+@app.route('/about')
 def about():
     return render_template('dev_page.html', quote=rq.get_random_quote())
 
@@ -67,70 +68,56 @@ def saints():
     return render_template('dev_page.html', quote=rq.get_random_quote())
 
 
-@app.route('/<string:post>/')
-def watch_post(post):
+@app.route('/<post>')
+def post(post):
     post = {'title': 'КакойНибудьЗаголовок', 'article': 'КакБыПримерСтатьи'}
     return render_template('post.html', quote=rq.get_random_quote(), post=post)
 
 
 @app.route('/page<int:id>/')
 def next_page(id):
-    global page_data
+    past_id = id - 1
+    next_id = id + 1
 
-    first_id = id * 10
-    last_id = first_id + 10
+    # для последней страницы
+    if id >= latest_id:
+        past_id = latest_id - 1
+        page_data = {'past_id': past_id, 'id': latest_id, 'min': False, 'max': True}
 
-    id += 1
-
-    if last_id >= last_articles_index:  # для самой последней страницы
-        first_id = last_articles_index - 10
-
-        id = str(last_articles_index)[0]
-        id = int(id)
-
-        posts = all_articles[first_id:last_id]
-        page_data = {'first_id': first_id, 'last_id': last_articles_index, 'last_index': last_articles_index, 'id': id,
-                        'min': False, 'max': True}
+        start_index = latest_id * 10
+        last_index = latest_index
+        posts = active_databases[start_index:last_index]
 
         return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data)
 
-    else:  # для последующих страниц
-        posts = all_articles[first_id:last_id]
-        page_data = {'first_id': first_id, 'last_id': last_id, 'last_index': last_articles_index, 'id': id,
-                        'min': False, 'max': False}
+    # для не крайних страниц
+    start_index = id * 10
+    last_index = start_index + 10
+    posts = active_databases[start_index:last_index]
 
-        return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data)
+    # для
+    if past_id < 0:
+        page_data = {'id': id, 'next_id': next_id, 'min': True, 'max': False}
+    else:
+        page_data = {'past_id': past_id, 'id': id, 'next_id': next_id, 'min': False, 'max': False}
+
+    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data)
 
 
 @app.route('/page<int:id>/')
-def last_page(id):
-    global page_data
+def past_page(id):
+    past_id = id - 1
+    next_id = id + 1
 
-    first_id = page_data['first_id'] - 10
-    last_id = page_data['last_id'] - 10
+    # для первой страницы
+    if id <= 0:
+        main_page()
 
-    if first_id <= 0:
-        # для самой первой страницы
-        first_id = 1
-        last_id = 11
-        id = 1
+    # для не крайних страниц
+    start_index = past_id * 10
+    last_index = start_index + 10
+    posts = active_databases[start_index:last_index]
 
-        page_data = {'first_id': first_id, 'last_id': last_id, 'last_index': last_articles_index, 'id': id,
-                        'min': False, 'max': False}
-        ic(page_data)
+    page_data = {'past_id': past_id, 'id': id, 'next_id': next_id, 'min': False, 'max': False}
 
-        return render_template('index.html', quote=rq.get_random_quote(),
-                               posts=all_articles[first_id:last_id],
-                               now_articles=page_data)
-    else:
-        # для последующих страниц
-        id -= 1
-
-        page_data = {'first_id': first_id, 'last_id': last_id, 'last_index': last_articles_index, 'id': id,
-                        'min': False, 'max': False}
-
-        ic(page_data)
-
-        return render_template('index.html', quote=rq.get_random_quote(),
-                               posts=all_articles[first_id:last_id],
-                               now_articles=page_data)
+    render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data)
