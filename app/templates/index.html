@@ -6,23 +6,24 @@
 
 {% for post in posts %}
 <div class="article">
-  <a href="{{ url_for('watch_post', post=post[2]) }}"><h3 class="title">{{ post[1] }}</h3></a>
-  <p><img class="article-image" src="../static/images/patriarch.png">{{ post[3] }}</p>
+  <a href="{{ url_for('post', post=post[3]) }}"><h3 class="title">{{ post[2] }}</h3></a>
+  <p><img class="article-image" src="../static/images/patriarch.png">{{ post[4] }}</p>
 </div>
 
 <hr width="80%" color="#c09669">
 {% endfor %}
 
 <br>
-{% if page.max %}
-<a class="button" href="{{ url_for('last_page', id=page.id) }}">&#8656; Назад</a>
 
-{% elif page.min %}
-<a class="button" href="{{ url_for('next_page', id=1) }}">Вперед &#8658;</a>
+{% if page.min %}
+<a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>
+
+{% elif page.max %}
+<a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a>
 
 {% else %}
-<a class="button" href="{{ url_for('last_page', id=page.id) }}">&#8656; Назад</a> |
-<a class="button" href="{{ url_for('next_page', id=page.id) }}">Вперед &#8658;</a>
+<a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a> |
+<a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>
 {% endif %}
 
 {% endblock %}
