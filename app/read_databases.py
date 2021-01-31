@@ -12,8 +12,7 @@ class DataBase:
         cursor.execute(query)
         connection.commit()
 
-    def pull_data(self, path):
-        query = 'SELECT * from articles'
+    def pull_data(self, path, query):
         connection = self.create_connection(path)
 
         cursor = connection.cursor()
@@ -46,8 +45,33 @@ class DataBase:
             self.update_data('articles.sqlite', query)
 
 
-def get_articles(path):
-    db = DataBase()
-    data = db.pull_data(path)
+def get_databases():
+    # TODO: обработать БД и сортировать по дате
+    def get_posts(path, query):
+        tuple_posts = db.pull_data(path, query)
 
-    return data
+        dict_posts = []
+
+        for post in tuple_posts:
+            dict_posts.append({'id': post[0], 'data': post[1], 'link': post[2], 'title': post[3], 'preview_image': post[4],
+                               'preview': post[5], 'post': post[6], 'images': post[7]})
+
+        return dict_posts
+
+    articles_database = get_posts('app\\static\\databases\\articles.sqlite', 'SELECT * from articles')
+    saints_databases = get_posts('app\\static\\databases\\saints.sqlite', 'SELECT * from saints')
+    our_events_databases = get_posts('app\\static\\databases\\our_events.sqlite', 'SELECT * from our_events')
+    all_church_events_databases = get_posts('app\\static\\databases\\all_church_events.sqlite', 'SELECT * from all_church_events')
+
+    return all_church_events_databases, our_events_databases, articles_database, saints_databases
+
+
+def get_all_posts():
+    # TODO: обработать все БД и сортировать по дате
+    all_church_events_databases, our_events_databases, articles_database, saints_databases = get_databases()
+    all_posts = articles_database + saints_databases + our_events_databases + all_church_events_databases
+
+    return all_posts
+
+
+db = DataBase()
