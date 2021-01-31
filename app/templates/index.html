@@ -15,14 +15,18 @@
 
 <br>
 
+<!-- Когда в рубрике всех постов числом меньше 10 -->
 {% if page.min and not page.over_ten %}
 
+<!-- Первая страница -->
 {% elif page.min and page.over_ten %}
 <a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>
 
+<!-- Последняя страница -->
 {% elif page.max %}
 <a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a>
 
+<!-- Средние страницы -->
 {% else %}
 <a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a> |
 <a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>

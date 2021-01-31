@@ -4,18 +4,26 @@
 <h2 class="title">{{ post.title }}</h2>
 <hr width="80%" color="#c09669">
 
+<!-- Для статей с фотками -->
+{% if post.images %}
 <div class="article">
   {% for elem in post.post %}
   <p>{{ elem }}</p>
   {% endfor %}
 </div>
 
-{% if post.images %}
-
 {% for image in post.images %}
 <img class="post-image" src="../static/images/post_images/{{ image }}">
 {% endfor %}
 
+<!-- Для статей, где просто текст -->
+{% elif not post.images %}
+<div class="article">
+  <p><img class="post-image" src="../static/images/post_images/{{ post.preview_image }}"></p>
+  {% for elem in post.post %}
+  <p>{{ elem }}</p>
+  {% endfor %}
+</div>
 {% endif %}
 
 <hr width="80%" color="#c09669">
