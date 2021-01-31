@@ -7,7 +7,7 @@
 {% for post in posts %}
 <div class="article">
   <a href="{{ url_for('post', post_link=post.link) }}"><h3 class="title">{{ post.title }}</h3></a>
-  <p><img class="article-image" src="../static/images/post_images/{{ post.main_image }}">{{ post.preview }}</p>
+  <p><img class="preview-image" src="../static/images/post_images/{{ post.preview_image }}">{{ post.preview }}</p>
 </div>
 
 <hr width="80%" color="#c09669">

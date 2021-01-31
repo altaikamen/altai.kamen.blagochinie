@@ -5,9 +5,18 @@
 <hr width="80%" color="#c09669">
 
 <div class="article">
-  <p><img class="article-image" src="../static/images/post_images/post.main_image">{{ post.article }}</p>
+  {% for elem in post.post %}
+  <p>{{ elem }}</p>
+  {% endfor %}
 </div>
 
-<hr width="80%" color="#c09669">
+{% if post.images %}
 
+{% for image in post.images %}
+<img class="post-image" src="../static/images/post_images/{{ image }}">
+{% endfor %}
+
+{% endif %}
+
+<hr width="80%" color="#c09669">
 {% endblock %}
