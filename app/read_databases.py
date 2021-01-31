@@ -53,8 +53,14 @@ def get_databases():
         dict_posts = []
 
         for post in tuple_posts:
+            if post[7]:
+                images = post[7].split(', ')
+            else:
+                images = None
+
+            # деление post по '\n' для того, что бы текст был абзацами, а не строкой
             dict_posts.append({'id': post[0], 'data': post[1], 'link': post[2], 'title': post[3], 'preview_image': post[4],
-                               'preview': post[5], 'post': post[6], 'images': post[7]})
+                               'preview': post[5], 'post': post[6].split('\n'), 'images': images})
 
         return dict_posts
 

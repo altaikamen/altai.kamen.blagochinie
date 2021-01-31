@@ -93,12 +93,6 @@ def post(post_link):
         if dict_post['link'] == post_link:
             post = dict_post
 
-            if isinstance(post['images'], str):
-                post['images'] = post['images'].split(', ')
-
-            if isinstance(post['post'], str):
-                post['post'] = post['post'].split('\n')
-
     return render_template('post.html', quote=rq.get_random_quote(), post=post, title=post['title'])
 
 
