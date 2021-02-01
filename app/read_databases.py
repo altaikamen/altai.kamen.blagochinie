@@ -62,6 +62,9 @@ def get_databases():
             dict_posts.append({'id': post[0], 'data': post[1], 'link': post[2], 'title': post[3], 'preview_image': post[4],
                                'preview': post[5], 'post': post[6].split('\n'), 'images': images})
 
+        # сортировка по дате
+        # DateList.sort(key=lambda date: datetime.strptime(date, '%d.%m.%Y'))
+
         return dict_posts
 
     articles_database = get_posts('app\\static\\databases\\articles.sqlite', 'SELECT * from articles')
