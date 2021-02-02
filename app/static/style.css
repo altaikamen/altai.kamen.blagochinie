@@ -59,32 +59,37 @@ body {
   vertical-align: top;
 }
 
-.search-box {  /* Стили для поля поиска */
-  border-radius: 10px;
-  margin-bottom: 15px;
-  padding: 0;
+.central-image {  /* выравнивание изображений по центру */
+  text-align: center;
 }
 
-.search-box input {  /* Поле ввода текста */
-  width: 80%;
-  height: 40px;
-  border: 0;
-  background: #ffffff;
-  border-radius: 3px 0 0 3px;
+.search-box {  /* поле поиска */
+  padding: 0;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
+
+.search-box input {  /* ввод текста в поле поиска */
   position: relative;
   float: left;
+  width: 80%;
+  height: 40px;
+  background: #ffffff;
+  border: 0;
+  border-radius: 3px 0 0 3px;
 }
 
-.search-box button {  /* Кнопка отправки формы */
-  border: 0;
-  cursor: pointer;
+.search-box button {  /* кнопка в поле поиска */
   height: 40px;
   width: 17%;
+  cursor: pointer;
   background: #a83b24;
+  border: 0;
   border-radius: 0 3px 3px 0;
+  cursor: pointer;
 }
 
-.search-box button:hover {
+.search-box button:hover {  /* кнопка в поле поиска при наведении */
   background: #e54040;
 }
 
@@ -96,12 +101,8 @@ body {
 
 /* Удаляем дополнительное пространство рядом с кнопкой в Mozilla Firefox */
 .search-box button::-moz-focus-inner {
-  border: 0;
   padding: 0;
-}
-
-.central-image {  /* выравнивание изображений по центру */
-  text-align: center;
+  border: 0;
 }
 
 .newsfeed {  /* главная лента с контентом */
@@ -120,7 +121,7 @@ body {
   max-height: 9em;
 }
 
-.post-image {
+.post-image {  /* изображения внктри постов */
   width: 100%;
   height: 100%;
   margin: 0.65em 0.65em 0.65em 0;
