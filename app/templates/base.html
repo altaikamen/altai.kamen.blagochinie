@@ -73,8 +73,8 @@
 
         <!-- Календарь -->
         <td class="column">
-          <form class="search-box">
-            <input type="text" placeholder="Искать..." required>
+          <form class="search-box" action="/search" method="post">
+            <input type="text" name="search_box" placeholder="Искать..." required>
             <button type="submit"><img src="../static/images/search_image.png" width="30" height="30"></button>
           </form>
 

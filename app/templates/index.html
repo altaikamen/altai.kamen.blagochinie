@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2 class="title">События</h2>
+<h2 class="title">{{ sub_title }}</h2>
 <hr width="80%" color="#c09669">
 
 {% for post in posts %}
@@ -15,7 +15,7 @@
 
 <br>
 
-<!-- Когда в рубрике всех постов числом меньше 10 -->
+<!-- Когда в рубрике это единственная -->
 {% if page.min and not page.over_ten %}
 
 <!-- Первая страница -->
