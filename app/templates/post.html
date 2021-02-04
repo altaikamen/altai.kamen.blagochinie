@@ -6,24 +6,31 @@
 
 <!-- Для статей с фотками -->
 {% if post.images %}
-<div class="article">
-  {% for elem in post.post %}
-  <p>{{ elem }}</p>
-  {% endfor %}
-</div>
+	<article>
+	  {% for text in post.post %}
+	  	<p>{{ text }}</p>
+	  {% endfor %}
 
-{% for image in post.images %}
-<img class="post-image" src="../static/images/post_images/{{ image }}">
-{% endfor %}
+	  <p class="sub-title" style="float: right;">{{ post.date }}</p>
+
+  {% for image in post.images %}
+  	<img class="post-image" src="../static/images/post_images/{{ image }}">
+  {% endfor %}
+  </article>
 
 <!-- Для статей, где просто текст -->
 {% elif not post.images %}
-<div class="article">
-  <p><img class="post-image" src="../static/images/post_images/{{ post.preview_image }}"></p>
-  {% for elem in post.post %}
-  <p>{{ elem }}</p>
-  {% endfor %}
-</div>
+	<article>
+		{% if post.preview_image %}
+			<img class="post-image" src="../static/images/post_images/{{ post.preview_image }}">
+    {% endif %}
+
+	  {% for text in post.post %}
+	  	<p>{{ text }}</p>
+	  {% endfor %}
+    
+	 <i class="date">{{ post.date }}</i>
+	</article>
 {% endif %}
 
 <hr width="80%" color="#c09669">

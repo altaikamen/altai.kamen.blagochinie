@@ -5,31 +5,37 @@
 <hr width="80%" color="#c09669">
 
 {% for post in posts %}
-<div class="article">
-  <a href="{{ url_for('post', post_link=post.link) }}"><h3 class="title">{{ post.title }}</h3></a>
-  <p><img class="preview-image" src="../static/images/post_images/{{ post.preview_image }}">{{ post.preview }}</p>
-</div>
+  <article>
+    <a href="{{ url_for('post', post_link=post.link) }}"><h3 class="title">{{ post.title }}</h3></a>
 
-<hr width="80%" color="#c09669">
+    {% if post.preview_image %}
+	    <img class="preview-image" src="../static/images/post_images/{{ post.preview_image }}">
+      <i class="date">{{ post.date }}</i>
+  	  <p>{{ post.preview }}</p>
+    {% else %}
+      <i class="date">{{ post.date }}</i>
+	    <p>{{ post.preview }}</p>
+    {% endif %}
+  </article>
+
+  <hr width="80%" color="#c09669">
 {% endfor %}
-
-<br>
 
 <!-- Когда в рубрике это единственная -->
 {% if page.min and not page.over_ten %}
 
 <!-- Первая страница -->
 {% elif page.min and page.over_ten %}
-<a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>
+	<a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>
 
 <!-- Последняя страница -->
 {% elif page.max %}
-<a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a>
+	<a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a>
 
 <!-- Средние страницы -->
 {% else %}
-<a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a> |
-<a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>
+	<a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a> |
+	<a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>
 {% endif %}
 
 {% endblock %}

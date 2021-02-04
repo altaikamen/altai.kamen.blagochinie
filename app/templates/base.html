@@ -67,11 +67,11 @@
 
         <!-- Новостная лента -->
         <td class="newsfeed">
-          <div class="articles">
+          <article>
             {% block content %}{% endblock %}
-        </div></td>
+        </article></td>
 
-        <!-- Календарь -->
+        <!-- Поле поиска и календарь -->
         <td class="column">
           <form class="search-box" action="/search" method="post">
             <input type="text" name="search_box" placeholder="Искать..." required>

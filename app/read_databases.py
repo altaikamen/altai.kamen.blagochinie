@@ -1,3 +1,4 @@
+from datetime import datetime
 import sqlite3
 
 
@@ -20,27 +21,45 @@ class DataBase:
         return cursor.fetchall()
 
 
+def sort_posts(posts):
+    sorted_posts = []
+
+    date_list = []
+    for post in posts:
+        date_list.append(post['date'])
+
+    set_date_list = list(set(date_list))  # для того, чтобы не было одинаковых дат и посты не повторялись
+    set_date_list.sort(key=lambda date: datetime.strptime(date, '%d.%m.%Y'))
+
+    # добавление статей по порядку
+    for date in set_date_list:
+        for post in posts:
+            if date == post['date']:
+                sorted_posts.append(post)
+
+    sorted_posts.reverse()  # чтобы сначала были новые посты, а потом старые
+
+    return sorted_posts
+
+
 def get_databases():
-    # TODO: обработать БД и сортировать по дате
     def get_posts(path, query):
         tuple_posts = db.pull_data(path, query)
 
-        dict_posts = []
-
+        posts = []
         for post in tuple_posts:
             if post[7]:
                 images = post[7].split(', ')
             else:
                 images = None
 
-            # деление post по '\n' для того, что бы текст был абзацами, а не строкой
-            dict_posts.append({'id': post[0], 'data': post[1], 'link': post[2], 'title': post[3], 'preview_image': post[4],
+            # деление post по '\n' для того, чтобы текст был абзацами, а не строкой
+            posts.append({'id': post[0], 'date': post[1], 'link': post[2], 'title': post[3], 'preview_image': post[4],
                                'preview': post[5], 'post': post[6].split('\n'), 'images': images})
 
-        # сортировка по дате
-        # DateList.sort(key=lambda date: datetime.strptime(date, '%d.%m.%Y'))
+        sorted_posts = sort_posts(posts)
 
-        return dict_posts
+        return sorted_posts
 
     articles_database = get_posts('app\\static\\databases\\articles.sqlite', 'SELECT * from articles')
     saints_databases = get_posts('app\\static\\databases\\saints.sqlite', 'SELECT * from saints')
@@ -51,11 +70,12 @@ def get_databases():
 
 
 def get_all_posts():
-    # TODO: обработать все БД и сортировать по дате
     all_church_events_databases, our_events_databases, articles_database, saints_databases = get_databases()
     all_posts = articles_database + saints_databases + our_events_databases + all_church_events_databases
 
-    return all_posts
+    sorted_all_posts = sort_posts(all_posts)
+
+    return sorted_all_posts
 
 
 db = DataBase()

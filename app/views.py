@@ -176,12 +176,12 @@ def past_page(id):
                     title=f'Страница {id} | Каменское Благочиние Славгородской Епархии')
 
 
-@app.route('/search', methods=['POST', 'GET'])
+@app.route('/search', methods=['POST'])
 def search():
     global active_databases
 
     search_box = ''
-    posts = []
+    match_list = []
 
     if request.method == 'POST':
         search_box = request.form.get('search_box')  # запрос к данным формы
@@ -190,10 +190,12 @@ def search():
         for text in post.values():
             match = re.search(search_box.lower(), str(text).lower())
             if match:
-                posts.append(post)
-                continue
+                match_list.append(post)
+                break
 
-    active_databases = posts
+    active_databases = match_list
+
+    posts = match_list[0:10]
     page_data = get_page_data()
 
     return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,

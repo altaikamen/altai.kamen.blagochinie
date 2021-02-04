@@ -121,6 +121,11 @@ body {
   max-height: 9em;
 }
 
+.date {
+  color: #c09669;
+  font-size: 14px;
+}
+
 .post-image {  /* изображения внктри постов */
   width: 100%;
   height: 100%;
