@@ -124,6 +124,7 @@ body {
 .date {
   color: #c09669;
   font-size: 14px;
+  text-align: right;
 }
 
 .post-image {  /* изображения внктри постов */

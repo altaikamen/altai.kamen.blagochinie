@@ -105,12 +105,47 @@ def saints():
 @app.route('/post/<post_link>')
 def post(post_link):
     post = {}
+    html = ''
 
     for dict_post in all_posts:
         if dict_post['link'] == post_link:
             post = dict_post
 
-    return render_template('post.html', quote=rq.get_random_quote(), post=post, title=post['title'])
+    all_text = ''
+    for string in post['post']:
+        all_text += f'<p>{string}</p>'
+
+    if post['images']:
+        all_images = ''
+        for image in post['images']:
+            all_images += f'<img class="post-image" src="../static/images/post_images/{image}">'
+
+        html = f"""
+                    <div class="date"><i>{ post['date'] }</i></div>
+                    <h2 class="title">{ post['title'] }</h2>
+                    <hr width="80%" color="#c09669">
+                    
+                    <article>
+                      {all_text}
+                      {all_images}
+                    </article>
+                """
+    else:
+        html = f"""
+                    <div class="date"><i>{ post['date'] }</i></div>
+                    <h2 class="title">{ post['title'] }</h2>
+                    <hr width="80%" color="#c09669">
+                    
+                    <article>
+                      <img class="post-image" src="../static/images/post_images/{ post['preview_image'] }">
+                      {all_text}
+                    </article>
+                """
+
+    with open('app\\templates\\post_text.html', 'w', encoding='utf-8') as file:
+        file.write(html)
+
+    return render_template('post.html', quote=rq.get_random_quote(), title=post['title'])
 
 
 @app.route('/page<int:id>/')

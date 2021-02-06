@@ -1,37 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2 class="title">{{ post.title }}</h2>
-<hr width="80%" color="#c09669">
+{% include 'post_text.html' %}
 
-<!-- Для статей с фотками -->
-{% if post.images %}
-	<article>
-	  {% for text in post.post %}
-	  	<p>{{ text }}</p>
-	  {% endfor %}
-
-	  <p class="sub-title" style="float: right;">{{ post.date }}</p>
-
-  {% for image in post.images %}
-  	<img class="post-image" src="../static/images/post_images/{{ image }}">
-  {% endfor %}
-  </article>
-
-<!-- Для статей, где просто текст -->
-{% elif not post.images %}
-	<article>
-		{% if post.preview_image %}
-			<img class="post-image" src="../static/images/post_images/{{ post.preview_image }}">
-    {% endif %}
-
-	  {% for text in post.post %}
-	  	<p>{{ text }}</p>
-	  {% endfor %}
-    
-	 <i class="date">{{ post.date }}</i>
-	</article>
-{% endif %}
-
+<br>
 <hr width="80%" color="#c09669">
 {% endblock %}

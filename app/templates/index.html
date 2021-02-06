@@ -6,18 +6,19 @@
 
 {% for post in posts %}
   <article>
+    <div class="date"><i>{{ post.date }}</i></div>
     <a href="{{ url_for('post', post_link=post.link) }}"><h3 class="title">{{ post.title }}</h3></a>
 
     {% if post.preview_image %}
 	    <img class="preview-image" src="../static/images/post_images/{{ post.preview_image }}">
-      <i class="date">{{ post.date }}</i>
   	  <p>{{ post.preview }}</p>
     {% else %}
-      <i class="date">{{ post.date }}</i>
 	    <p>{{ post.preview }}</p>
+      <div class="date"><i>{{ post.date }}</i></div>
     {% endif %}
   </article>
 
+  <br>
   <hr width="80%" color="#c09669">
 {% endfor %}
 
