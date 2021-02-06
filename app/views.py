@@ -6,7 +6,7 @@ from icecream import ic
 
 app = Flask(__name__)
 
-all_church_events_databases, our_events_databases, articles_database, saints_databases = read_databases.get_databases()
+all_church_events_databases, our_events_databases, articles_database, saints_databases, churches_databases, clergy_databases = read_databases.get_databases()
 all_posts = read_databases.get_all_posts()
 
 active_databases = all_posts  # нужна для того, что бы не передавать много аргументов
@@ -102,45 +102,82 @@ def saints():
                            title='Святые о... | Каменское Благочиние Славгородской Епархии')
 
 
+@app.route('/churches/')
+def churches():
+    global active_databases, active_sub_title
+
+    active_databases = churches_databases
+    active_sub_title = 'Храмы благочиния'
+
+    posts = active_databases
+
+    return render_template('sections/churches_menu.html', quote=rq.get_random_quote(),
+                           title='Храмы Благочиния | Каменское Благочиние Славгородской Епархии')
+
+
+@app.route('/clergy/')
+def clergy():
+    global active_databases, active_sub_title
+
+    active_databases = clergy_databases
+    active_sub_title = 'Духовенство'
+
+    posts = active_databases
+
+    return render_template('sections/clerics_menu.html', quote=rq.get_random_quote(),
+                           title='Духовенство Благочиния | Каменское Благочиние Славгородской Епархии')
+
+
 @app.route('/post/<post_link>')
 def post(post_link):
     post = {}
-    html = ''
 
     for dict_post in all_posts:
         if dict_post['link'] == post_link:
             post = dict_post
 
-    all_text = ''
+    tag_text = ''
     for string in post['post']:
-        all_text += f'<p>{string}</p>'
+        tag_text += f'<p>{string}</p>'
 
+    # просто разные стили постов
     if post['images']:
-        all_images = ''
+        tag_images = ''
         for image in post['images']:
-            all_images += f'<img class="post-image" src="../static/images/post_images/{image}">'
+            tag_images += f'<img class="post-image" src="../static/images/post_images/{image}">'
 
         html = f"""
-                    <div class="date"><i>{ post['date'] }</i></div>
-                    <h2 class="title">{ post['title'] }</h2>
+                    <div class="date"><i>{post['date']}</i></div>
+                    <h2 class="title">{post['title']}</h2>
                     <hr width="80%" color="#c09669">
                     
                     <article>
-                      {all_text}
-                      {all_images}
+                      {tag_text}
+                      {tag_images}
                     </article>
                 """
     else:
-        html = f"""
-                    <div class="date"><i>{ post['date'] }</i></div>
-                    <h2 class="title">{ post['title'] }</h2>
-                    <hr width="80%" color="#c09669">
-                    
-                    <article>
-                      <img class="post-image" src="../static/images/post_images/{ post['preview_image'] }">
-                      {all_text}
-                    </article>
-                """
+        if post['preview_image']:
+            html = f"""
+                        <div class="date"><i>{post['date']}</i></div>
+                        <h2 class="title">{post['title']}</h2>
+                        <hr width="80%" color="#c09669">
+                        
+                        <article>
+                          <img class="post-image" src="../static/images/post_images/{post['preview_image']}">
+                          {tag_text}
+                        </article>
+                    """
+        else:
+            html = f"""
+                        <div class="date"><i>{post['date']}</i></div>
+                        <h2 class="title">{post['title']}</h2>
+                        <hr width="80%" color="#c09669">
+
+                        <article>
+                          {tag_text}
+                        </article>
+                    """
 
     with open('app\\templates\\post_text.html', 'w', encoding='utf-8') as file:
         file.write(html)
@@ -238,31 +275,19 @@ def search():
                            title='Поиск По Архиву | Каменское Благочиние Славгородской Епархии')
 
 
-@app.route('/contact')
-def contact():
-    return render_template('sections/contact.html', quote=rq.get_random_quote(),
-                           title='Контактная Информация | Каменское Благочиние Славгородской Епархии')
-
-
 @app.route('/archbishop')
 def archbishop():
     return render_template('sections/archbishop.html', quote=rq.get_random_quote(),
                            title='Правящий Архиерей | Каменское Благочиние Славгородской Епархии')
 
 
-@app.route('/clergy/')
-def clergy():
-    return render_template('clergy/clerics_menu.html', quote=rq.get_random_quote(),
-                           title='Духовенство Благочиния | Каменское Благочиние Славгородской Епархии')
-
-
-@app.route('/churches/')
-def churches():
-    return render_template('churches/churches_menu.html', quote=rq.get_random_quote(),
-                           title='Храмы Благочиния | Каменское Благочиние Славгородской Епархии')
-
-
 @app.route('/about')
 def about():
     return render_template('dev_page.html', quote=rq.get_random_quote(),
                            title='О Благочинии | Каменское Благочиние Славгородской Епархии')
+
+
+@app.route('/contact')
+def contact():
+    return render_template('sections/contact.html', quote=rq.get_random_quote(),
+                           title='Контактная Информация | Каменское Благочиние Славгородской Епархии')

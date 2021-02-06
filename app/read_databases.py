@@ -42,37 +42,43 @@ def sort_posts(posts):
     return sorted_posts
 
 
+def get_posts(path, query):
+    tuple_posts = db.pull_data(path, query)
+
+    posts = []
+    for post in tuple_posts:
+        if post[7]:
+            images = post[7].split(', ')
+        else:
+            images = None
+
+        # деление post по '\n' для того, чтобы текст был абзацами, а не строкой
+        posts.append({'id': post[0], 'date': post[1], 'link': post[2], 'title': post[3], 'preview_image': post[4],
+                           'preview': post[5], 'post': post[6].split('\n'), 'images': images})
+
+    sorted_posts = sort_posts(posts)
+
+    return sorted_posts
+
+
 def get_databases():
-    def get_posts(path, query):
-        tuple_posts = db.pull_data(path, query)
-
-        posts = []
-        for post in tuple_posts:
-            if post[7]:
-                images = post[7].split(', ')
-            else:
-                images = None
-
-            # деление post по '\n' для того, чтобы текст был абзацами, а не строкой
-            posts.append({'id': post[0], 'date': post[1], 'link': post[2], 'title': post[3], 'preview_image': post[4],
-                               'preview': post[5], 'post': post[6].split('\n'), 'images': images})
-
-        sorted_posts = sort_posts(posts)
-
-        return sorted_posts
-
+    all_church_events_databases = get_posts('app\\static\\databases\\all_church_events.sqlite', 'SELECT * from all_church_events')
+    our_events_databases = get_posts('app\\static\\databases\\our_events.sqlite', 'SELECT * from our_events')
     articles_database = get_posts('app\\static\\databases\\articles.sqlite', 'SELECT * from articles')
     saints_databases = get_posts('app\\static\\databases\\saints.sqlite', 'SELECT * from saints')
-    our_events_databases = get_posts('app\\static\\databases\\our_events.sqlite', 'SELECT * from our_events')
-    all_church_events_databases = get_posts('app\\static\\databases\\all_church_events.sqlite', 'SELECT * from all_church_events')
+    churches_databases = get_posts('app\\static\\databases\\churches.sqlite', 'SELECT * from churches')
+    clergy_databases = get_posts('app\\static\\databases\\clergy.sqlite', 'SELECT * from clergy')
 
-    return all_church_events_databases, our_events_databases, articles_database, saints_databases
+    return all_church_events_databases, our_events_databases, articles_database, saints_databases, churches_databases, clergy_databases
 
 
 def get_all_posts():
-    all_church_events_databases, our_events_databases, articles_database, saints_databases = get_databases()
-    all_posts = articles_database + saints_databases + our_events_databases + all_church_events_databases
+    all_church_events_databases = get_posts('app\\static\\databases\\all_church_events.sqlite', 'SELECT * from all_church_events')
+    our_events_databases = get_posts('app\\static\\databases\\our_events.sqlite', 'SELECT * from our_events')
+    articles_database = get_posts('app\\static\\databases\\articles.sqlite', 'SELECT * from articles')
+    saints_databases = get_posts('app\\static\\databases\\saints.sqlite', 'SELECT * from saints')
 
+    all_posts = articles_database + saints_databases + our_events_databases + all_church_events_databases
     sorted_all_posts = sort_posts(all_posts)
 
     return sorted_all_posts
