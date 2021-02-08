@@ -138,25 +138,28 @@ body {
   margin: 0.65em 0.65em 0.65em 0;
 }
 
-.button {
-  color: #c09669;
-}
-
-.button:hover {
-  color: #a83b24;
-}
-
 a {
   text-decoration: none;
-  color: #a83b24;
+  color: #c09669;
 }
 
 a:hover {  /* ссылка при наведении */
-  color: #c09669;
+  color: #a83b24;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: cursive;
+}
+
+.left-button {
+  text-align: left;
+  float: left;
+  margin: 0; /* Обнуляем значение отступов */
+  padding: 4px; /* Значение полей */
+}
+
+.right-button {
+  text-align: right;
 }
 
 
@@ -185,6 +188,11 @@ header {  /* шапка */
   width: 50%;
   text-align: center;
   color: #c09669;
+}
+
+.title-column a {
+  color: #c09669;
+  text-align: center;
 }
 
 .title-column a:hover {  /* ссылка в шапке при наведении */

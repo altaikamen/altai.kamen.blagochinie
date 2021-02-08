@@ -1,22 +1,22 @@
-from flask import Flask, render_template, url_for, redirect, request
 import re
-from app import random_quote as rq
-from app import read_databases
+from flask import Flask, render_template, url_for, redirect, request
 from icecream import ic
+from app import random_quote as rq
+from app import databases
 
 app = Flask(__name__)
 
-all_church_events_databases, our_events_databases, articles_database, saints_databases, churches_databases, clergy_databases = read_databases.get_databases()
-all_posts = read_databases.get_all_posts()
-
-active_databases = all_posts  # нужна для того, что бы не передавать много аргументов
-active_sub_title = ''
+active_page_title = ''
 
 
-# используется для первой страницы в рубриках
-# нужно для тех случаев, когда постов меньше 10 в рубрики и создавать кнопки не надо
-def get_page_data():
-    tuple_posts = active_databases[0:11]
+# нужно для тех случаев, когда постов меньше 10 в рубрики и создавать кнопки может быть не надо
+def get_page_data(section):
+    if section == 'all_posts':
+        database = databases.get_all_posts()
+    else:
+        database = databases.get_section(section)
+
+    tuple_posts = database[0:11]
 
     if len(tuple_posts) <= 10:
         page_data = {'past_id': None, 'id': 0, 'next_id': 1, 'min': True, 'max': False, 'over_ten': False}
@@ -29,111 +29,126 @@ def get_page_data():
 @app.route('/')
 @app.route('/main_page')
 def main_page():
-    global active_databases, active_sub_title
+    global active_page_title
 
-    active_databases = all_posts
-    active_sub_title = 'Все события'
+    all_posts = databases.get_all_posts()
+    active_page_title = 'Все события'
+    section = 'all_posts'
 
-    posts = active_databases[0:10]
-    page_data = get_page_data()
+    posts = all_posts[0:10]
+    page_data = get_page_data(section)
 
-    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,
-                           sub_title=active_sub_title,
-                           title='Официальный Сайт Каменского Благочиния Славгородской Епархии')
+    return render_template('index.html', random_quote=rq.get_random_quote(), posts=posts, page=page_data,
+                           section=section,
+                           page_title=active_page_title,
+                           tab_title='Официальный Сайт Каменского Благочиния Славгородской Епархии')
 
 
-@app.route('/all_church_events')
+@app.route('/all_church_events/')
 def all_church_events():
-    global active_databases, active_sub_title
+    global active_page_title
 
-    active_databases = all_church_events_databases
-    active_sub_title = 'Общецерковные события'
+    all_church_events_database = databases.get_section('all_church_events')
+    active_page_title = 'Общецерковные события'
+    section = 'all_church_events'
 
-    posts = active_databases[0:10]
-    page_data = get_page_data()
+    posts = all_church_events_database[0:10]
+    page_data = get_page_data(section)
 
-    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,
-                           sub_title=active_sub_title,
-                           title='Общецерковные События | Каменское Благочиние Славгородской Епархии')
+    return render_template('index.html', random_quote=rq.get_random_quote(), posts=posts, page=page_data,
+                           section=section,
+                           page_title=active_page_title,
+                           tab_title='Общецерковные События | Каменское Благочиние Славгородской Епархии')
 
 
-@app.route('/our_events')
+@app.route('/our_events/')
 def our_events():
-    global active_databases, active_sub_title
+    global active_page_title
 
-    active_databases = our_events_databases
-    active_sub_title = 'События благочиния'
+    our_events_database = databases.get_section('our_events')
+    active_page_title = 'События благочиния'
+    section = 'our_events'
 
-    posts = active_databases[0:10]
-    page_data = get_page_data()
+    posts = our_events_database[0:10]
+    page_data = get_page_data(section)
 
-    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,
-                           sub_title=active_sub_title,
-                           title='События Благочиния | Каменское Благочиние Славгородской Епархии')
+    return render_template('index.html', random_quote=rq.get_random_quote(), posts=posts, page=page_data,
+                           section=section,
+                           page_title=active_page_title,
+                           tab_title='События Благочиния | Каменское Благочиние Славгородской Епархии')
 
 
-@app.route('/articles')
+@app.route('/articles/')
 def articles():
-    global active_databases, active_sub_title
+    global active_page_title
 
-    active_databases = articles_database
-    active_sub_title = 'Статьи'
+    articles_database = databases.get_section('articles')
+    active_page_title = 'Статьи'
+    section = 'articles'
 
-    posts = active_databases[0:10]
-    page_data = get_page_data()
+    posts = articles_database[0:10]
+    page_data = get_page_data(section)
 
-    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,
-                           sub_title=active_sub_title,
-                           title='Статьи | Каменское Благочиние Славгородской Епархии')
+    return render_template('index.html', random_quote=rq.get_random_quote(), posts=posts, page=page_data,
+                           section=section,
+                           page_title=active_page_title,
+                           tab_title='Статьи | Каменское Благочиние Славгородской Епархии')
 
 
-@app.route('/saints')
+@app.route('/saints/')
 def saints():
-    global active_databases, active_sub_title
+    global active_page_title
 
-    active_databases = saints_databases
-    active_sub_title = 'Святые о...'
+    saints_database = databases.get_section('saints')
+    active_page_title = 'Святые о...'
+    section = 'saints'
 
-    posts = active_databases[0:10]
-    page_data = get_page_data()
+    posts = saints_database[0:10]
+    page_data = get_page_data(section)
 
-    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,
-                           sub_title=active_sub_title,
-                           title='Святые о... | Каменское Благочиние Славгородской Епархии')
+    return render_template('index.html', random_quote=rq.get_random_quote(), posts=posts, page=page_data,
+                           section=section,
+                           page_title=active_page_title,
+                           tab_title='Святые о... | Каменское Благочиние Славгородской Епархии')
 
 
 @app.route('/churches/')
 def churches():
-    global active_databases, active_sub_title
+    global active_page_title
 
-    active_databases = churches_databases
-    active_sub_title = 'Храмы благочиния'
+    churches_database = databases.get_parish('churches')
 
-    posts = active_databases
-
-    return render_template('sections/churches_menu.html', quote=rq.get_random_quote(),
-                           title='Храмы Благочиния | Каменское Благочиние Славгородской Епархии')
+    return render_template('sections/parish.html', random_quote=rq.get_random_quote(), parishes=churches_database,
+                           page_title='Храмы благочиния',
+                           tab_title='Храмы Благочиния | Каменское Благочиние Славгородской Епархии')
 
 
 @app.route('/clergy/')
 def clergy():
-    global active_databases, active_sub_title
+    global active_page_title
 
-    active_databases = clergy_databases
-    active_sub_title = 'Духовенство'
+    clergy_database = databases.get_parish('clergy')
 
-    posts = active_databases
+    return render_template('sections/parish.html', random_quote=rq.get_random_quote(), parishes=clergy_database,
+                           section='clergy',
+                           page_title='Духовенство',
+                           tab_title='Духовенство Благочиния | Каменское Благочиние Славгородской Епархии')
 
-    return render_template('sections/clerics_menu.html', quote=rq.get_random_quote(),
-                           title='Духовенство Благочиния | Каменское Благочиние Славгородской Епархии')
+
+@app.route('/parish/<link>')
+def parish(link):
+    # TODO: найти по url и открыть
+    return render_template('dev_page.html', random_quote=rq.get_random_quote(),
+                           tab_title='Храм | Каменское Благочиние Славгородской Епархии')
 
 
-@app.route('/post/<post_link>')
-def post(post_link):
+@app.route('/<section>/<link>')
+def post(section, link):
     post = {}
 
+    all_posts = databases.get_all_posts()
     for dict_post in all_posts:
-        if dict_post['link'] == post_link:
+        if dict_post['link'] == link:
             post = dict_post
 
     tag_text = ''
@@ -150,7 +165,7 @@ def post(post_link):
                     <div class="date"><i>{post['date']}</i></div>
                     <h2 class="title">{post['title']}</h2>
                     <hr width="80%" color="#c09669">
-                    
+
                     <article>
                       {tag_text}
                       {tag_images}
@@ -162,7 +177,7 @@ def post(post_link):
                         <div class="date"><i>{post['date']}</i></div>
                         <h2 class="title">{post['title']}</h2>
                         <hr width="80%" color="#c09669">
-                        
+
                         <article>
                           <img class="post-image" src="../static/images/post_images/{post['preview_image']}">
                           {tag_text}
@@ -173,91 +188,84 @@ def post(post_link):
                         <div class="date"><i>{post['date']}</i></div>
                         <h2 class="title">{post['title']}</h2>
                         <hr width="80%" color="#c09669">
-
                         <article>
                           {tag_text}
                         </article>
                     """
 
-    with open('app\\templates\\post_text.html', 'w', encoding='utf-8') as file:
+    with open('app/templates/post_text.html', 'w', encoding='utf-8') as file:
         file.write(html)
 
-    return render_template('post.html', quote=rq.get_random_quote(), title=post['title'])
+    return render_template('post.html', random_quote=rq.get_random_quote(), tab_title=post['title'])
 
 
-@app.route('/page<int:id>/')
-def next_page(id):
-    past_id = id - 1
-    next_id = id + 1
+@app.route('/<section>/page<int:id>')
+def page(section, id):
+    # для первых страниц
+    if id <= 0:
+        if section == 'all_posts':
+            return redirect(url_for('main_page'))
+        elif section == 'all_church_events':
+            return redirect(url_for('all_church_events'))
+        elif section == 'our_events':
+            return redirect(url_for('our_events'))
+        elif section == 'articles':
+            return redirect(url_for('articles'))
+        elif section == 'saints':
+            return redirect(url_for('saints'))
 
-    latest_index = active_databases.index(active_databases[-1]) + 1  # потому что в списке индексы с нуля, а в срезе с 1
+    if section == 'all_posts':
+        database = databases.get_all_posts()
+    else:
+        database = databases.get_section(section)
+
+    latest_index = database.index(database[-1]) + 1  # потому что в списке индексы с нуля, а в срезе с 1
     latest_id = int(str(latest_index)[0])
 
-    # для последней страницы
+    # для последних страниц
     if id >= latest_id:
         last_index = latest_index
 
         if last_index <= 10:  # если последняя страница - единственная в рубрике
-            page_data = {'past_id': None, 'id': latest_id, 'next_id': None, 'min': True, 'max': False, 'over_ten': False}
-            posts = active_databases[0:latest_index]
+            page_data = {'id': latest_id, 'min': True, 'max': False, 'over_ten': False}
+            posts = database[0:latest_index]
         else:
             start_index = latest_id * 10
-            posts = active_databases[start_index:latest_index]
+            posts = database[start_index:latest_index]
 
-            past_id = latest_id - 1
-            page_data = {'past_id': past_id, 'id': latest_id, 'next_id': None, 'min': False, 'max': True, 'over_ten': True}
+            page_data = {'id': latest_id, 'min': False, 'max': True, 'over_ten': True}
 
-        return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,
-                               sub_title=active_sub_title,
-                               title=f'Страница {latest_id} | Каменское Благочиние Славгородской Епархии')
+        return render_template('index.html', random_quote=rq.get_random_quote(), posts=posts, page=page_data,
+                               section=section,
+                               page_title=active_page_title,
+                               tab_title=f'Страница {latest_id} | Каменское Благочиние Славгородской Епархии')
 
     # для не крайних страниц
     start_index = id * 10
     last_index = start_index + 10
-    posts = active_databases[start_index:last_index]
+    posts = database[start_index:last_index]
 
-    # для того что бы не было отрицательных значений у post_id
-    if past_id < 0:
-        page_data = {'past_id': None, 'id': id, 'next_id': next_id, 'min': True, 'max': False, 'over_ten': True}
+    # для того что бы не было отрицательных значений у id
+    if id - 1 < 0:
+        page_data = {'id': id, 'min': True, 'max': False, 'over_ten': True}
     else:
-        page_data = {'past_id': past_id, 'id': id, 'next_id': next_id, 'min': False, 'max': False, 'over_ten': True}
+        page_data = {'id': id, 'min': False, 'max': False, 'over_ten': True}
 
-    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,
-                           sub_title=active_sub_title,
-                           title=f'Страница {id} | Каменское Благочиние Славгородской Епархии')
-
-
-@app.route('/page<int:id>/')
-def past_page(id):
-    past_id = id - 1
-    next_id = id + 1
-
-    # для первой страницы
-    if id <= 0:
-        return redirect(url_for('main_page'))
-
-    # для не крайних страниц
-    start_index = past_id * 10
-    last_index = start_index + 10
-    posts = active_databases[start_index:last_index]
-
-    page_data = {'past_id': past_id, 'id': id, 'next_id': next_id, 'min': False, 'max': False, 'over_ten': True}
-
-    render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,
-                    sub_title=active_sub_title,
-                    title=f'Страница {id} | Каменское Благочиние Славгородской Епархии')
+    return render_template('index.html', random_quote=rq.get_random_quote(), posts=posts, page=page_data,
+                           section=section,
+                           page_title=active_page_title,
+                           tab_title=f'Страница {id} | Каменское Благочиние Славгородской Епархии')
 
 
 @app.route('/search', methods=['POST'])
 def search():
-    global active_databases
-
     search_box = ''
     match_list = []
 
     if request.method == 'POST':
         search_box = request.form.get('search_box')  # запрос к данным формы
 
+    all_posts = databases.get_all_posts()
     for post in all_posts:
         for text in post.values():
             match = re.search(search_box.lower(), str(text).lower())
@@ -265,29 +273,31 @@ def search():
                 match_list.append(post)
                 break
 
-    active_databases = match_list
+    # database = databases.db.delete_and_create_search(match_list)
+    # posts = database[0:10]
 
     posts = match_list[0:10]
-    page_data = get_page_data()
+    page_data = get_page_data('search')
 
-    return render_template('index.html', quote=rq.get_random_quote(), posts=posts, page=page_data,
-                           sub_title='Результаты поиска по архиву',
-                           title='Поиск По Архиву | Каменское Благочиние Славгородской Епархии')
+    return render_template('index.html', random_quote=rq.get_random_quote(), posts=posts, page=page_data,
+                           section='search',
+                           page_title='Результаты поиска по архиву',
+                           tab_title='Поиск По Архиву | Каменское Благочиние Славгородской Епархии')
 
 
 @app.route('/archbishop')
 def archbishop():
-    return render_template('sections/archbishop.html', quote=rq.get_random_quote(),
-                           title='Правящий Архиерей | Каменское Благочиние Славгородской Епархии')
+    return render_template('sections/archbishop.html', random_quote=rq.get_random_quote(),
+                           tab_title='Правящий Архиерей | Каменское Благочиние Славгородской Епархии')
 
 
 @app.route('/about')
 def about():
-    return render_template('dev_page.html', quote=rq.get_random_quote(),
-                           title='О Благочинии | Каменское Благочиние Славгородской Епархии')
+    return render_template('dev_page.html', random_quote=rq.get_random_quote(),
+                           tab_title='О Благочинии | Каменское Благочиние Славгородской Епархии')
 
 
 @app.route('/contact')
 def contact():
-    return render_template('sections/contact.html', quote=rq.get_random_quote(),
-                           title='Контактная Информация | Каменское Благочиние Славгородской Епархии')
+    return render_template('sections/contact.html', random_quote=rq.get_random_quote(),
+                           tab_title='Контактная Информация | Каменское Благочиние Славгородской Епархии')

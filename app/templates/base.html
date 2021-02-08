@@ -4,7 +4,7 @@
   <head>
     <!-- Название и логотип -->
     <meta charset="utf-8">
-    <title>{{ title }}</title>
+    <title>{{ tab_title }}</title>
     <link rel="shortcut icon" href="../static/images/patriarch.png" type="image/png">
     <link rel="stylesheet" href="../static/style.css">
 
@@ -22,8 +22,8 @@
         <td class="image-column"><img src="../static/images/patriarch.png"></td>
         <td class="title-column">
           <h1>&#9769;</h1>
-          <h1><a class="title" href="{{ url_for('main_page') }}">КАМЕНСКОЕ БЛАГОЧИНИЕ СЛАВГОРОДСКОЙ ЕПАРХИИ</a></h1>
-          <h3><a class="title" href="{{ url_for('main_page') }}">Русской Православной Церкви Московского Патриархата</a></h3>
+          <h1><a href="{{ url_for('main_page') }}">КАМЕНСКОЕ БЛАГОЧИНИЕ СЛАВГОРОДСКОЙ ЕПАРХИИ</a></h1>
+          <h3><a href="{{ url_for('main_page') }}">Русской Православной Церкви Московского Патриархата</a></h3>
         </td>
         <td class="image-column"><img src="../static/images/church.jpg"></td>
       </tr></table>
@@ -55,7 +55,7 @@
         <td class="column">
 
           <h2 class="title">Цитата дня</h2>
-          <p class="sub-title">{{ quote }}</p>
+          <p class="sub-title">{{ random_quote }}</p>
 
           <!-- Вставляемая часть -->
           <div class="image-link">

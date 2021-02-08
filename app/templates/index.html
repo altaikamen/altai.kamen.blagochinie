@@ -1,20 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2 class="title">{{ sub_title }}</h2>
+<h2 class="title">{{ page_title }}</h2>
 <hr width="80%" color="#c09669">
 
 {% for post in posts %}
   <article>
     <div class="date"><i>{{ post.date }}</i></div>
-    <a href="{{ url_for('post', post_link=post.link) }}"><h3 class="title">{{ post.title }}</h3></a>
+    <a href="{{ url_for('post', section=post.section, link=post.link) }}"><h3 class="title">{{ post.title }}</h3></a>
 
     {% if post.preview_image %}
 	    <img class="preview-image" src="../static/images/post_images/{{ post.preview_image }}">
-  	  <p>{{ post.preview }}</p>
+  	  <p>{{ post.preview_post }}</p>
     {% else %}
-	    <p>{{ post.preview }}</p>
-      <div class="date"><i>{{ post.date }}</i></div>
+	    <p>{{ post.preview_post }}</p>
     {% endif %}
   </article>
 
@@ -27,16 +26,18 @@
 
 <!-- Первая страница -->
 {% elif page.min and page.over_ten %}
-	<a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>
+  <div class="right-button"><a href="{{ url_for('page', section=section, id=page.id+1) }}">Вперед &#8658;</a></div>
 
 <!-- Последняя страница -->
 {% elif page.max %}
-	<a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a>
+	<a href="{{ url_for('page', section=section, id=page.id-1) }}">&#8656; Назад</a>
 
 <!-- Средние страницы -->
 {% else %}
-	<a class="button" href="{{ url_for('past_page', id=page.past_id) }}">&#8656; Назад</a> |
-	<a class="button" href="{{ url_for('next_page', id=page.next_id) }}">Вперед &#8658;</a>
+	<div class="left-button">
+    <a href="{{ url_for('page', section=section, id=page.id-1) }}">&#8656; Назад</a></div>
+	<div class="right-button">
+    <a href="{{ url_for('page', section=section, id=page.id+1) }}">Вперед &#8658;</a></div>
 {% endif %}
 
 {% endblock %}
