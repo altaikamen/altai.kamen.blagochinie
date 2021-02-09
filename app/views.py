@@ -145,9 +145,9 @@ def post(section, link):
     else:
         database = databases.get_all_posts()
 
-    for dict_post in database:
-        if dict_post['link'] == link:
-            post = dict_post
+    for posts in database:
+        if posts['link'] == link:
+            post = posts
 
     tag_text = ''
     for string in post['post']:
