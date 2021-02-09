@@ -20,9 +20,6 @@ class DataBase:
         cursor.execute(query)
         return cursor.fetchall()
 
-    def delete_and_create_search(self, match_list):
-        pass
-
 
 db = DataBase()
 
@@ -55,7 +52,8 @@ def get_parish(database):
 
     parishes = []
     for parish in tuple_parish:
-        parishes.append({'id': parish[0], 'link': parish[1], 'title': parish[2], 'image': parish[3]})
+        parishes.append({'id': parish[0], 'date': None, 'link': parish[1], 'title': parish[2], 'preview_image': parish[3],
+                         'post': parish[4].split('\n'), 'images': parish[5]})
 
     return parishes
 
@@ -91,3 +89,40 @@ def get_all_posts():
     sorted_all_posts = sort_posts(all_posts)
 
     return sorted_all_posts
+
+
+def update_search(match_list):
+    # удаление старых совпадений
+    delete_quote = 'DELETE FROM search;'
+    db.update_data('app\\static\\databases\\search.sqlite', delete_quote)
+
+    # добавление новых
+    for post in match_list:
+        post_text = ' '.join(post['post'])  # списки не добавляются как строка
+
+        if isinstance(post['images'], list):  # списки не добавляются как строка
+            images = ' '.join(post['images'])
+        else:
+            images = None
+
+        if post['preview_image']:
+            query = f"""
+                        INSERT INTO
+                            search (date, link, title, preview_image, preview_post, post, images)
+                        VALUES
+                            ('{post['date']}', '{post['link']}', '{post['title']}', '{post['preview_image']}', 
+                            '{post['preview_post']}', '{post_text}', '{images}');
+                    """
+
+            db.update_data('app\\static\\databases\\search.sqlite', query)
+
+        else:  # что бы значение было None и при отображении в index.html попадало под условие else
+            query = f"""
+                        INSERT INTO
+                            search (date, link, title, preview_image, preview_post, post, images)
+                        VALUES
+                            ('{post['date']}', '{post['link']}', '{post['title']}', NULL,
+                            '{post['preview_post']}', '{post_text}', '{post['images']}');
+                    """
+
+            db.update_data('app\\static\\databases\\search.sqlite', query)

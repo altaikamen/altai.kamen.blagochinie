@@ -16,9 +16,9 @@ def get_page_data(section):
     else:
         database = databases.get_section(section)
 
-    tuple_posts = database[0:11]
+    posts = database[0:11]
 
-    if len(tuple_posts) <= 10:
+    if len(posts) <= 10:
         page_data = {'past_id': None, 'id': 0, 'next_id': 1, 'min': True, 'max': False, 'over_ten': False}
     else:
         page_data = {'past_id': None, 'id': 0, 'next_id': 1, 'min': True, 'max': False, 'over_ten': True}
@@ -31,10 +31,10 @@ def get_page_data(section):
 def main_page():
     global active_page_title
 
-    all_posts = databases.get_all_posts()
     active_page_title = 'Все события'
     section = 'all_posts'
 
+    all_posts = databases.get_all_posts()
     posts = all_posts[0:10]
     page_data = get_page_data(section)
 
@@ -48,10 +48,10 @@ def main_page():
 def all_church_events():
     global active_page_title
 
-    all_church_events_database = databases.get_section('all_church_events')
     active_page_title = 'Общецерковные события'
     section = 'all_church_events'
 
+    all_church_events_database = databases.get_section('all_church_events')
     posts = all_church_events_database[0:10]
     page_data = get_page_data(section)
 
@@ -65,10 +65,10 @@ def all_church_events():
 def our_events():
     global active_page_title
 
-    our_events_database = databases.get_section('our_events')
     active_page_title = 'События благочиния'
     section = 'our_events'
 
+    our_events_database = databases.get_section('our_events')
     posts = our_events_database[0:10]
     page_data = get_page_data(section)
 
@@ -82,10 +82,10 @@ def our_events():
 def articles():
     global active_page_title
 
-    articles_database = databases.get_section('articles')
     active_page_title = 'Статьи'
     section = 'articles'
 
+    articles_database = databases.get_section('articles')
     posts = articles_database[0:10]
     page_data = get_page_data(section)
 
@@ -99,10 +99,10 @@ def articles():
 def saints():
     global active_page_title
 
-    saints_database = databases.get_section('saints')
     active_page_title = 'Святые о...'
     section = 'saints'
 
+    saints_database = databases.get_section('saints')
     posts = saints_database[0:10]
     page_data = get_page_data(section)
 
@@ -119,6 +119,7 @@ def churches():
     churches_database = databases.get_parish('churches')
 
     return render_template('sections/parish.html', random_quote=rq.get_random_quote(), parishes=churches_database,
+                           section='churches',
                            page_title='Храмы благочиния',
                            tab_title='Храмы Благочиния | Каменское Благочиние Славгородской Епархии')
 
@@ -135,25 +136,27 @@ def clergy():
                            tab_title='Духовенство Благочиния | Каменское Благочиние Славгородской Епархии')
 
 
-@app.route('/parish/<link>')
-def parish(link):
-    # TODO: найти по url и открыть
-    return render_template('dev_page.html', random_quote=rq.get_random_quote(),
-                           tab_title='Храм | Каменское Благочиние Славгородской Епархии')
-
-
 @app.route('/<section>/<link>')
 def post(section, link):
     post = {}
 
-    all_posts = databases.get_all_posts()
-    for dict_post in all_posts:
+    if section == 'clergy' or section == 'churches':
+        database = databases.get_parish(section)
+    else:
+        database = databases.get_all_posts()
+
+    for dict_post in database:
         if dict_post['link'] == link:
             post = dict_post
 
     tag_text = ''
     for string in post['post']:
         tag_text += f'<p>{string}</p>'
+
+    if post['date']:
+        date = post['date']
+    else:  # для /clergy и /churches
+        date = ''
 
     # просто разные стили постов
     if post['images']:
@@ -162,7 +165,7 @@ def post(section, link):
             tag_images += f'<img class="post-image" src="../static/images/post_images/{image}">'
 
         html = f"""
-                    <div class="date"><i>{post['date']}</i></div>
+                    <div class="date"><i>{date}</i></div>
                     <h2 class="title">{post['title']}</h2>
                     <hr width="80%" color="#c09669">
 
@@ -174,7 +177,7 @@ def post(section, link):
     else:
         if post['preview_image']:
             html = f"""
-                        <div class="date"><i>{post['date']}</i></div>
+                        <div class="date"><i>{date}</i></div>
                         <h2 class="title">{post['title']}</h2>
                         <hr width="80%" color="#c09669">
 
@@ -185,7 +188,7 @@ def post(section, link):
                     """
         else:
             html = f"""
-                        <div class="date"><i>{post['date']}</i></div>
+                        <div class="date"><i>{date}</i></div>
                         <h2 class="title">{post['title']}</h2>
                         <hr width="80%" color="#c09669">
                         <article>
@@ -213,6 +216,8 @@ def page(section, id):
             return redirect(url_for('articles'))
         elif section == 'saints':
             return redirect(url_for('saints'))
+        elif section == 'search':
+            return redirect(url_for('search'))
 
     if section == 'all_posts':
         database = databases.get_all_posts()
@@ -257,31 +262,45 @@ def page(section, id):
                            tab_title=f'Страница {id} | Каменское Благочиние Славгородской Епархии')
 
 
-@app.route('/search', methods=['POST'])
-def search():
+@app.route('/start_search', methods=['POST'])
+def start_search():
     search_box = ''
     match_list = []
 
     if request.method == 'POST':
         search_box = request.form.get('search_box')  # запрос к данным формы
 
+    pattern_list = search_box.split()
+
     all_posts = databases.get_all_posts()
     for post in all_posts:
         for text in post.values():
-            match = re.search(search_box.lower(), str(text).lower())
-            if match:
-                match_list.append(post)
-                break
+            for pattern in pattern_list:
+                match = re.search(pattern.lower(), str(text).lower())
+                if match:
+                    if post not in match_list:  # чтобы не добавлялось одно и тоже
+                        match_list.append(post)
+                    break
 
-    # database = databases.db.delete_and_create_search(match_list)
-    # posts = database[0:10]
+    databases.update_search(match_list)
 
-    posts = match_list[0:10]
-    page_data = get_page_data('search')
+    return redirect(url_for('search'))
+
+
+@app.route('/search')
+def search():
+    global active_page_title
+
+    search_database = databases.get_section('search')
+    active_page_title = 'Результаты поиска по архиву'
+    section = 'search'
+
+    posts = search_database[0:10]
+    page_data = get_page_data(section)
 
     return render_template('index.html', random_quote=rq.get_random_quote(), posts=posts, page=page_data,
                            section='search',
-                           page_title='Результаты поиска по архиву',
+                           page_title=active_page_title,
                            tab_title='Поиск По Архиву | Каменское Благочиние Славгородской Епархии')
 
 

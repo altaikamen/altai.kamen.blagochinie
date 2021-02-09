@@ -6,7 +6,7 @@
 
 <ul>
   {% for parish in parishes %}
-    <li><a href="{{ url_for('parish', link=parish.link) }}">{{ parish.title }}</a></li>
+    <li><a href="{{ url_for('post', section=section, link=parish.link) }}">{{ parish.title }}</a></li>
   {% endfor %}
 </ul>
 
