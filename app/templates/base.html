@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+  <head>
+    <!-- Название и логотип -->
+    <meta charset="utf-8">
+    <title>{{ tab_title }}</title>
+    <link rel="shortcut icon" href="../static/images/patriarch.png" type="image/png">
+    <link rel="stylesheet" href="../static/style.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" media="screen and (orientation: portrait) and 
+    (max-width:920px), projection" href="../static/style.css">
+    <link rel="stylesheet" media="screen and (orientation: portrait) and 
+    (max-width:1120px), projection" href="../static/style.css">
+  </head>
+
+  <body>
+    <!-- Шапка -->
+    <header>
+      <table class="base-table"><tr>
+        <td class="image-column"><img src="../static/images/patriarch.png"></td>
+        <td class="title-column">
+          <h1>&#9769;</h1>
+          <h1><a href="{{ url_for('main_page') }}">КАМЕНСКОЕ БЛАГОЧИНИЕ СЛАВГОРОДСКОЙ ЕПАРХИИ</a></h1>
+          <h3><a href="{{ url_for('main_page') }}">Русской Православной Церкви Московского Патриархата</a></h3>
+        </td>
+        <td class="image-column"><img src="../static/images/church.jpg"></td>
+      </tr></table>
+
+      <hr color="#c09669">  <!-- Линия, отделяющая меню от заголовка -->
+
+      <!-- Меню -->
+      <nav class="menu"><ul>
+        <li><a>РУБРИКИ</a>
+          <ul>
+            <li><a href="{{ url_for('all_church_events') }}">Общецерковные события</a></li>
+            <li><a href="{{ url_for('our_events') }}">События благочиния</a></li>
+            <li><a href="{{ url_for('articles') }}">Статьи</a></li>
+            <li><a href="{{ url_for('saints') }}">Святые о...</a></li>
+        </ul></li>
+
+        <li><a href="{{ url_for('archbishop') }}">ПРАВЯЩИЙ АРХИЕРЕЙ</a></li>
+        <li><a href="{{ url_for('about') }}">О БЛАГОЧИНИИ</a></li>
+        <li><a href="{{ url_for('churches') }}">ХРАМЫ</a></li>
+        <li><a href="{{ url_for('clergy') }}">ДУХОВЕНСТВО</a></li>
+        <li><a href="{{ url_for('contact') }}">КОНТАКТЫ</a></li>
+    </ul></nav></header>
+
+    <!-- Тело страницы -->
+    <div class="content">
+      <table class="base-table"><tr>
+
+        <!-- Ссылки и цитаты дня -->
+        <td class="column">
+
+          <h2 class="title">Цитата дня</h2>
+          <p class="sub-title">{{ random_quote }}</p>
+
+          <!-- Вставляемая часть -->
+          <div class="image-link">
+            <h2 class="title">Ссылки</h2>
+            <p class="central-image"><a href="http://www.patriarchia.ru/"><img src="../static/images/patriarchia_logo.jpg" height="50" width="250"></a></p>
+            <p class="central-image"><a href="https://www.altai-eparhia.ru/"><img src="../static/images/archdiocese_logo.jpg" height="50" width="250"></a></p>
+            <p class="central-image"><a href="http://slaveparhya.cerkov.ru/"><img src="../static/images/diocese_logo.jpg" height="50" width="250"></a></p>
+        </div></td>
+
+        <!-- Новостная лента -->
+        <td class="newsfeed">
+          <article>
+            {% block content %}{% endblock %}
+        </article></td>
+
+        <!-- Поле поиска и календарь -->
+        <td class="column">
+          <form class="search-box" action="/start_search" method="post">
+            <input type="text" name="search_box" placeholder="Искать..." required>
+            <button type="submit"><img src="../static/images/search_image.png" width="30" height="30"></button>
+          </form>
+
+          <script language="Javascript" src="https://script.pravoslavie.ru/calendar.php?life=1&tmshift=4&icon=0&dayicon=1&hrams=0&name=0&images=1&feofan=1"></script>
+    </td></tr></table></div>
+
+    <!-- Подвал -->
+    <footer>
+      <div class="rights">
+        <h2>КАМЕНСКОЕ БЛАГОЧИНИЕ СЛАВГОРОДСКОЙ ЕПАРХИИ</h2>
+        <hr color="#c09669">
+        <p>Copyright © 2020 Каменское благочиние Славгородской епархии.</p>
+</div></footer></body></html>

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 class="title">{{ page_title }}</h2>
+<hr width="80%" color="#c09669">
+
+<ul>
+  {% for parish in parishes %}
+    <li><a href="{{ url_for('post', section=section, link=parish.link) }}">{{ parish.title }}</a></li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
