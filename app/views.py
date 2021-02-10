@@ -1,5 +1,5 @@
 import re
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, abort
 from icecream import ic
 from app import random_quote as rq
 from app import databases
@@ -118,7 +118,7 @@ def churches():
 
     churches_database = databases.get_parish('churches')
 
-    return render_template('sections/parish.html', random_quote=rq.get_random_quote(), parishes=churches_database,
+    return render_template('parish.html', random_quote=rq.get_random_quote(), parishes=churches_database,
                            section='churches',
                            page_title='Храмы благочиния',
                            tab_title='Храмы Благочиния | Каменское Благочиние Славгородской Епархии')
@@ -130,10 +130,28 @@ def clergy():
 
     clergy_database = databases.get_parish('clergy')
 
-    return render_template('sections/parish.html', random_quote=rq.get_random_quote(), parishes=clergy_database,
+    return render_template('parish.html', random_quote=rq.get_random_quote(), parishes=clergy_database,
                            section='clergy',
                            page_title='Духовенство',
                            tab_title='Духовенство Благочиния | Каменское Благочиние Славгородской Епархии')
+
+
+@app.route('/archbishop')
+def archbishop():
+    return render_template('archbishop.html', random_quote=rq.get_random_quote(),
+                           tab_title='Правящий Архиерей | Каменское Благочиние Славгородской Епархии')
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html', random_quote=rq.get_random_quote(),
+                           tab_title='О Благочинии | Каменское Благочиние Славгородской Епархии')
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html', random_quote=rq.get_random_quote(),
+                           tab_title='Контактная Информация | Каменское Благочиние Славгородской Епархии')
 
 
 @app.route('/<section>/<link>')
@@ -151,7 +169,7 @@ def post(section, link):
 
     tag_text = ''
     for string in post['post']:
-        tag_text += f'<p>{string}</p>'
+        tag_text += f'<p>{string}</p>\n'
 
     if post['date']:
         date = post['date']
@@ -159,8 +177,8 @@ def post(section, link):
         date = ''
 
     # просто разные стили постов
+    tag_images = ''
     if post['images']:
-        tag_images = ''
         for image in post['images']:
             tag_images += f'<img class="post-image" src="../static/images/post_images/{image}">'
 
@@ -176,13 +194,19 @@ def post(section, link):
                 """
     else:
         if post['preview_image']:
+            preview_image = post['preview_image']
+            tag_preview_image = ''
+            if section == 'clergy' or section == 'churches':
+                tag_preview_image += f'<img class="cleric-image" src="../static/images/post_images/{preview_image}">'
+            else:
+                tag_preview_image += f'<img class="post-image" src="../static/images/post_images/{preview_image}">'
             html = f"""
                         <div class="date"><i>{date}</i></div>
                         <h2 class="title">{post['title']}</h2>
                         <hr width="80%" color="#c09669">
 
                         <article>
-                          <img class="post-image" src="../static/images/post_images/{post['preview_image']}">
+                          {tag_preview_image}
                           {tag_text}
                         </article>
                     """
@@ -302,21 +326,3 @@ def search():
                            section='search',
                            page_title=active_page_title,
                            tab_title='Поиск По Архиву | Каменское Благочиние Славгородской Епархии')
-
-
-@app.route('/archbishop')
-def archbishop():
-    return render_template('sections/archbishop.html', random_quote=rq.get_random_quote(),
-                           tab_title='Правящий Архиерей | Каменское Благочиние Славгородской Епархии')
-
-
-@app.route('/about')
-def about():
-    return render_template('dev_page.html', random_quote=rq.get_random_quote(),
-                           tab_title='О Благочинии | Каменское Благочиние Славгородской Епархии')
-
-
-@app.route('/contact')
-def contact():
-    return render_template('sections/contact.html', random_quote=rq.get_random_quote(),
-                           tab_title='Контактная Информация | Каменское Благочиние Славгородской Епархии')

@@ -21,31 +21,11 @@ class DataBase:
         cursor.execute(query)
         return cursor.fetchall()
 
-    def create_database(self):
 
-        # создание таблиц
-        table = """
-                    CREATE TABLE IF NOT EXISTS quotes (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        quote TEXT
-                    );
-                """
-
-        self.update_data('app\\static\\databases\\quotes.sqlite', table)
-
-        for quote in [str('фраза '+str(elem)) for elem in range(1, 100)]:
-            query = f"""
-                        INSERT INTO
-                            quotes (quote)
-                        VALUES
-                            ('{quote}');
-                    """
-
-            self.update_data('app\\static\\databases\\quotes.sqlite', query)
+db = DataBase()
 
 
 def get_random_quote():
-    db = DataBase()
     data = db.pull_data('app\\static\\databases\\quotes.sqlite')
 
     random_quote = random.choice(data)

@@ -1,3 +1,57 @@
+/* стили постов */
+.post-image {  /* изображения внутри постов */
+  width: 100%;
+  height: 100%;
+  margin: 0.65em 0.65em 0.65em 0;
+}
+
+.cleric-image {
+  float: left;
+  max-width: 50%;
+  max-height: 50%;
+  margin: 0.65em 0.65em 0.65em 0;
+}
+
+.without-markers {  /* список без маркеров */
+  list-style-type: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: cursive;
+}
+
+.date {  /* дата статьи */
+  color: #c09669;
+  font-size: 14px;
+  text-align: right;
+}
+
+.title {  /* названия и заголовки */
+  text-align: center;
+  color: #c09669;
+}
+
+a.title:hover {
+  text-decoration: underline;
+}
+
+.sub-title {
+  color: #c09669;
+}
+
+a {
+  text-decoration: none;
+  color: #c09669;
+}
+
+a:hover {  /* ссылка при наведении */
+  color: #a83b24;
+}
+
+
+
+/* адаптация страницы */
+
 @media screen and (max-width: 920px) {
   /* фиксирование таблицы, что бы не уходила за края */
   table {
@@ -32,7 +86,6 @@
   }
 }
 
-
 @media screen and (max-width: 1120px) {
   /* удаление столбцов с изображениями и поле поиска */
   .image-column, .search-box {
@@ -41,127 +94,8 @@
 }
 
 
-body {
-  margin: 0;
-  padding: 2.25%;
-  background-color: #c09669;
-}
 
-.content {  /* центральная часть страницы */
-  padding: 0.5em;
-  background-color: #ffffff;
-}
-
-.column {  /* дополнительная лента рядом с главной */
-  background-color: #f1f1f1;
-  width: 25%;
-  padding: 1em;
-  vertical-align: top;
-}
-
-.central-image {  /* выравнивание изображений по центру */
-  text-align: center;
-}
-
-.search-box {  /* поле поиска */
-  padding: 0;
-  margin-bottom: 15px;
-  border-radius: 10px;
-}
-
-.search-box input {  /* ввод текста в поле поиска */
-  position: relative;
-  float: left;
-  width: 80%;
-  height: 40px;
-  background: #ffffff;
-  border: 0;
-  border-radius: 3px 0 0 3px;
-}
-
-.search-box button {  /* кнопка в поле поиска */
-  height: 40px;
-  width: 17%;
-  cursor: pointer;
-  background: #a83b24;
-  border: 0;
-  border-radius: 0 3px 3px 0;
-  cursor: pointer;
-}
-
-.search-box button:hover {  /* кнопка в поле поиска при наведении */
-  background: #e54040;
-}
-
-.search-box input:focus,
-.search-box button:focus,
-.search-box button:active {  /* убирает черную рамку */
-  outline: 0;
-}
-
-/* Удаляем дополнительное пространство рядом с кнопкой в Mozilla Firefox */
-.search-box button::-moz-focus-inner {
-  padding: 0;
-  border: 0;
-}
-
-.newsfeed {  /* главная лента с контентом */
-  vertical-align: top;
-  width: auto;
-  padding: 1em;
-  background-color: #f1f1f1;
-}
-
-.preview-image {  /* картинка в статье */
-  float: left;
-  margin: 0.65em 0.65em 0.65em 0;
-  width: 100%;
-  height: 100%;
-  max-width: 9em;
-  max-height: 9em;
-}
-
-.date {
-  color: #c09669;
-  font-size: 14px;
-  text-align: right;
-}
-
-.post-image {  /* изображения внктри постов */
-  width: 100%;
-  height: 100%;
-  margin: 0.65em 0.65em 0.65em 0;
-}
-
-.cleric-image {
-  float: left;
-  margin: 0.65em 0.65em 0.65em 0;
-}
-
-a {
-  text-decoration: none;
-  color: #c09669;
-}
-
-a:hover {  /* ссылка при наведении */
-  color: #a83b24;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: cursive;
-}
-
-.left-button {
-  text-align: left;
-  float: left;
-  margin: 0; /* Обнуляем значение отступов */
-  padding: 4px; /* Значение полей */
-}
-
-.right-button {
-  text-align: right;
-}
-
+/* неизменный шаблон всех страниц */
 
 header {  /* шапка */
   background-color: #a83b24;
@@ -198,20 +132,6 @@ header {  /* шапка */
 .title-column a:hover {  /* ссылка в шапке при наведении */
   text-decoration: underline;
 }
-
-.title {  /* названия и заголовки */
-  text-align: center;
-  color: #c09669;
-}
-
-a .title:hover {
-  text-decoration: underline;
-}
-
-.sub-title {
-  color: #c09669;
-}
-
 
 /* далее меню сайта */
 .menu ul {  /* главное меню */
@@ -254,6 +174,100 @@ a .title:hover {
 
 .menu li:hover ul, .menu li:hover li {  /* выдвижение меню */
   display: block;
+}
+
+
+/* далее каркас страниц */
+body {
+  margin: 0;
+  padding: 2.25%;
+  background-color: #c09669;
+}
+
+.content {  /* центральная часть страницы */
+  padding: 0.5em;
+  background-color: #ffffff;
+}
+
+.column {  /* дополнительная лента рядом с главной */
+  background-color: #f1f1f1;
+  width: 25%;
+  padding: 1em;
+  vertical-align: top;
+}
+
+.newsfeed {  /* главная лента с контентом */
+  vertical-align: top;
+  width: auto;
+  padding: 1em;
+  background-color: #f1f1f1;
+}
+
+.preview-image {  /* превью-картинка внутри рубрики */
+  float: left;
+  margin: 0.65em 0.65em 0.65em 0;
+  width: 100%;
+  height: 100%;
+  max-width: 9em;
+  max-height: 9em;
+}
+
+.central-image {  /* картинки, которые надо выровнять по середине */
+  text-align: center;
+}
+
+/* далее поле поиска */
+.search-box {  /* поле поиска */
+  padding: 0;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
+
+.search-box input {  /* ввод текста в поле поиска */
+  position: relative;
+  float: left;
+  width: 80%;
+  height: 40px;
+  background: #ffffff;
+  border: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.search-box button {  /* кнопка в поле поиска */
+  height: 40px;
+  width: 17%;
+  background: #a83b24;
+  border: 0;
+  border-radius: 0 3px 3px 0;
+  cursor: pointer;
+}
+
+.search-box button:hover {  /* кнопка в поле поиска при наведении */
+  background: #e54040;
+}
+
+.search-box input:focus,
+.search-box button:focus,
+.search-box button:active {  /* убирает черную рамку */
+  outline: 0;
+}
+
+/* Удаляем дополнительное пространство рядом с кнопкой в Mozilla Firefox */
+.search-box button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+/* другое на странице */
+.left-button {  /* кнопка "назад" */
+  float: left;
+  margin: 0;
+  padding: 4px;
+  text-align: left;
+}
+
+.right-button {  /* кнопка "вперед" */
+  text-align: right;
 }
 
 
