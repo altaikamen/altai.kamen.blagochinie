@@ -1,6 +1,5 @@
 import re
-from flask import Flask, render_template, url_for, redirect, request, abort
-from icecream import ic
+from flask import Flask, render_template, url_for, redirect, request
 from app import random_quote as rq
 from app import databases
 
